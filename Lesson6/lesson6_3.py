@@ -6,7 +6,7 @@ min = 1
 max = 100
 count = 0
 target = random.randint(min,max)
-# print(target)
+print(target)
 while True:
   #input("猜數字的範圍:",min,"~",max) # input只能有一個引數值 所以不對 更新如下
   keyin = int(input(f"猜數字的範圍:{min}~{max}:"))
