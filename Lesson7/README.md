@@ -490,3 +490,376 @@ argparse
 # 一句話記住
 
 > **`ArgumentParser` 是 `argparse` 模組中的一個類別，用來建立一個負責「接收、檢查、解析命令列參數」的物件。**
+
+# 可選擇性的參數（Optional Argument）
+
+## 什麼是可選擇性的參數（Optional Argument）？
+
+可選擇性的參數，意思是：
+
+> **使用者可以輸入，也可以不輸入。**
+
+程式仍然可以正常執行。
+
+例如：
+
+```bash
+python test.py
+```
+
+可以執行。
+
+也可以：
+
+```bash
+python test.py --name Tom
+```
+
+也可以執行。
+
+這就是**可選擇性的參數（Optional Argument）**。
+
+---
+
+# 和必要參數（Positional Argument）比較
+
+## 必要參數（Positional Argument）
+
+例如：
+
+```python
+parser.add_argument("name")
+```
+
+注意：
+
+```text
+"name"
+```
+
+沒有 `-` 或 `--`。
+
+表示：
+
+> **一定要輸入。**
+
+例如：
+
+```bash
+python test.py Tom
+```
+
+✔ 可以
+
+但是：
+
+```bash
+python test.py
+```
+
+就會出現錯誤：
+
+```text
+error: the following arguments are required: name
+```
+
+因為 `name` 是必要的。
+
+---
+
+## 可選擇性的參數（Optional Argument）
+
+例如：
+
+```python
+parser.add_argument("--name")
+```
+
+注意：
+
+```text
+--name
+```
+
+前面多了兩個減號。
+
+這就代表：
+
+> **可以輸入，也可以不輸入。**
+
+例如：
+
+### 不輸入
+
+```bash
+python test.py
+```
+
+也可以執行。
+
+---
+
+### 有輸入
+
+```bash
+python test.py --name Tom
+```
+
+也可以。
+
+此時：
+
+```python
+print(args.name)
+```
+
+得到：
+
+```text
+Tom
+```
+
+---
+
+# 為什麼叫 Optional？
+
+因為它不是一定要有。
+
+例如：
+
+假設程式：
+
+```python
+parser.add_argument("--age")
+```
+
+你可以：
+
+```bash
+python test.py
+```
+
+沒有年齡。
+
+也可以：
+
+```bash
+python test.py --age 18
+```
+
+有年齡。
+
+都可以。
+
+---
+
+# 如果沒有輸入會怎樣？
+
+例如：
+
+```python
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--name")
+
+args = parser.parse_args()
+
+print(args.name)
+```
+
+執行：
+
+```bash
+python test.py
+```
+
+輸出：
+
+```python
+None
+```
+
+因為沒有輸入。
+
+所以：
+
+```python
+args.name == None
+```
+
+---
+
+如果：
+
+```bash
+python test.py --name Tom
+```
+
+輸出：
+
+```text
+Tom
+```
+
+---
+
+# 為什麼 Optional Argument 前面都有 `-` 或 `--`？
+
+這是命令列程式共同的規則。
+
+例如：
+
+```bash
+python test.py --name Tom
+```
+
+程式一看到：
+
+```text
+--name
+```
+
+就知道：
+
+> 「這是一個選項（Option），不是一般資料。」
+
+因此：
+
+```text
+--name
+      │
+      ▼
+Tom
+```
+
+就知道：
+
+```text
+Tom
+```
+
+是 `name` 的值。
+
+---
+
+# 一個生活中的比喻
+
+假設你填寫會員資料。
+
+有：
+
+```text
+姓名 *
+電話 *
+Email
+Line ID
+生日
+```
+
+其中：
+
+```text
+*
+```
+
+代表必填。
+
+---
+
+## 必填（Positional Argument）
+
+```text
+姓名 *
+```
+
+一定要填。
+
+否則不能送出。
+
+---
+
+## 可選（Optional Argument）
+
+```text
+生日
+```
+
+可以不填。
+
+照樣送出。
+
+---
+
+# 在 `argparse` 裡面的表示方式
+
+## 必要參數（Positional Argument）
+
+```python
+parser.add_argument("name")
+```
+
+因為沒有 `-`。
+
+一定要輸入。
+
+---
+
+## 可選參數（Optional Argument）
+
+```python
+parser.add_argument("--name")
+```
+
+有 `--`。
+
+可以不用輸入。
+
+---
+
+甚至可以設定縮寫：
+
+```python
+parser.add_argument("-n", "--name")
+```
+
+執行：
+
+```bash
+python test.py -n Tom
+```
+
+或：
+
+```bash
+python test.py --name Tom
+```
+
+效果完全相同。
+
+---
+
+# 比較表
+
+| 類型 | 寫法 | 是否一定要輸入 | 範例 |
+|------|------|:-------------:|------|
+| 必要參數（Positional Argument） | `parser.add_argument("name")` | ✅ 是 | `python test.py Tom` |
+| 可選參數（Optional Argument） | `parser.add_argument("--name")` | ❌ 否 | `python test.py --name Tom` |
+
+---
+
+# Positional Argument 與 Optional Argument 最大的差別
+
+| 項目 | Positional Argument | Optional Argument |
+|------|---------------------|-------------------|
+| 是否需要 `-` 或 `--` | ❌ 不需要 | ✅ 需要 |
+| 是否一定要輸入 | ✅ 一定要 | ❌ 不一定 |
+| 沒輸入時 | 程式報錯 | 值通常為 `None`（除非設定 `default`） |
+| 範例 | `python test.py Tom` | `python test.py --name Tom` |
+
+---
+
+# 一句話記住
+
+> **可選擇性的參數（Optional Argument）就是可以不提供的命令列參數，通常以 `-` 或 `--` 開頭。如果沒有提供，`argparse` 預設會將它的值設為 `None`（除非你另外設定 `default` 預設值）。**
