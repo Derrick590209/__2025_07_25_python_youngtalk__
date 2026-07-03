@@ -3,7 +3,7 @@ import random
 
 playCount = 1
 parser = argparse.ArgumentParser(description="猜數字遊戲")
-parser.add_argument("-n", "--name",type=str, help = "姓名")
+parser.add_argument("-n", "--name",type=str, help = "輸入姓名")
 args = parser.parse_args()
 
 if not args.name:
